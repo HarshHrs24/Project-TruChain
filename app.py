@@ -193,7 +193,7 @@ with st.container():
     else:
         st.write("No prediction available for the selected date.")
     with open('model/model.json', 'r') as fin:
-     m = model_from_json(fin.read())  # Load model
+         m = model_from_json(fin.read())  # Load model
     forecast = pd.read_csv('model/forecast.csv')
     fig=plot_plotly(m,forecast)
     st.plotly_chart(fig)
