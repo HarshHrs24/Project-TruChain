@@ -6,6 +6,7 @@ protobuf~=3.19.0
 watchdog==2.1.8
 seaborn
 pandas==1.5.3
+holidays==0.21
 numpy==1.22.3
 prophet==1.1.2
 matplotlib==3.7.0

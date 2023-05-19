@@ -1,13 +1,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
-
-from prophet.plot import plot_plotly
-
-from prophet.serialize import model_to_json
-from prophet.plot import plot_plotly
 import pandas as pd  
 from prophet import *
 import numpy as np
-import plotly.express as px
 
 
 
