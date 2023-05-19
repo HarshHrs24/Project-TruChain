@@ -1,16 +1,13 @@
 import streamlit as st
 import pandas as pd
-from prophet.plot import plot_plotly, plot_components_plotly
+from prophet.plot import plot_plotly
 import plotly.express as px
-import plotly.graph_objects as go
 import requests
 from streamlit_lottie import st_lottie
-from PIL import Image
-import base64
 import smtplib
 from prophet.serialize import model_from_json
-from prophet.plot import plot_plotly
 import datetime
+from streamlit_timeline import st_timeline
 
 
 
@@ -22,10 +19,9 @@ with st.container():
     with c1:
         st.title("TruChain")
         st.write(
-            " Stay Ahead of the Game with TruChain."
+            "Stay Ahead of the Game with TruChain."
         )
-        st.write("[Learn More >]()")
-
+        st.write("[Learn More >](https://www.craft.do/s/ObT9EzINTmlNed)")
     with c2:
             st.image('images/scm.jpeg')
 
@@ -38,23 +34,24 @@ def load_lottieurl(url):
     return r.json()
 
 
-# Use local CSS
+
 def local_css(file_name):
     with open(file_name) as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
+# Description
+def info(title, text):
+    with st.expander(f"{title}"):
+        st.write(text)
 
 local_css("style/style.css")
 
 # ---- LOAD ASSETS ----
-lottie_coding = load_lottieurl("https://assets5.lottiefiles.com/packages/lf20_fcfjwiyb.json")
+lottie_coding_1 = load_lottieurl("https://assets5.lottiefiles.com/packages/lf20_fcfjwiyb.json")
+lottie_coding_2 = load_lottieurl("https://assets5.lottiefiles.com/packages/lf20_2cwDXD.json")
 
 
-# Set header and subheader
 
-# Upload data
-# st.subheader("Upload Data")
-# uploaded_file = st.file_uploader("Choose a file")
 
 st.sidebar.header('TruChain')
 
@@ -67,73 +64,12 @@ df = pd.read_csv(path)
 
 
 
-# st.sidebar.subheader('Choose a city:')
-# donut_theta = st.sidebar.selectbox('Select data', ())
 
-# st.sidebar.subheader('Line chart parameters')
-# plot_data = st.sidebar.multiselect('Select data', [])
-# plot_height = st.sidebar.slider('Specify plot height', 200, 500, 250)
 
 st.sidebar.markdown('''
 ---
-Created with ❤️ by [TruChain]().
+Created with ❤️ by [TruChain](https://github.com/Shivansh1203/TruChain).
 ''')
-
-# if uploaded_file is not None:
-#     data = pd.read_csv(uploaded_file)
-
-#     # Display data
-#     st.subheader("Data")
-#     st.write(data)
-
-#     # Select date and demand columns
-#     date_col = st.selectbox("Select date column", options=data.columns)
-#     demand_col = st.selectbox("Select demand column", options=data.columns)
-
-#     # Convert date column to datetime format
-#     data[date_col] = pd.to_datetime(data[date_col])
-
-#     # Group data by date column and calculate sum of demand
-#     grouped_data = data.groupby(date_col)[demand_col].sum().reset_index()
-
-#     # Rename columns to ds and y for Prophet
-#     grouped_data = grouped_data.rename(columns={date_col: "ds", demand_col: "y"})
-
-#     # Set up Prophet model
-#     model = Prophet()
-
-#     # Fit model on data
-#     model.fit(grouped_data)
-
-#     # Set number of periods to forecast
-#     periods = st.number_input("Number of periods to forecast", min_value=1, max_value=365, value=30)
-
-#     # Make future dataframe
-#     future = model.make_future_dataframe(periods=periods)
-
-#     # Make forecast
-#     forecast = model.predict(future)
-
-#     # Plot forecast
-#     st.subheader("Forecast Plot")
-#     fig1 = plot_plotly(model, forecast)
-#     st.plotly_chart(fig1)
-
-#     # Plot forecast components
-#     st.subheader("Forecast Components Plot")
-#     fig2 = plot_components_plotly(model, forecast)
-#     st.plotly_chart(fig2)
-
-#     # Download forecast data
-#     st.subheader("Download Forecast Data")
-#     csv = forecast.to_csv(index=False)
-#     href = f'<a href="data:file/csv;base64,{base64.b64encode(csv.encode()).decode()}" download="forecast.csv">Download CSV</a>'
-#     st.markdown(href, unsafe_allow_html=True)
-
-
-
-
-
 
 
 # ---- WHAT I DO ----
@@ -157,46 +93,120 @@ with st.container():
         )
         st.write("[Our Repository >]()")
     with right_column:
-        st_lottie(lottie_coding, height=300, key="coding")
+        if selected_model == 'Forecasting Model':
+            st_lottie(lottie_coding_1, height=300, key="coding")
+        else:
+            st_lottie(lottie_coding_2, height=300, key="coding")
+
 # ---- PROJECTS ----
 with st.container():
     st.write("---")
-    st.header("Our Model")
-    # Load the forecast data
-    df = pd.read_csv("model/forecast.csv")
 
-    # Define start and end dates
-    start_date = datetime.date(2015, 1, 1)
-    end_date = datetime.date(2023, 12, 31)
+    if(selected_model=='Forecasting Model'):
 
-    # Create date input
-    selected_date = st.date_input(
-        "Choose a date",
-        value=datetime.date(2015, 1, 1),
-        min_value=start_date,
-        max_value=end_date,
-        key="date_input"
-    )
-
-    # Filter the forecast data for the selected date
-    d = selected_date.strftime("%Y-%m-%d")
-    forecast = df.loc[df['ds'] == d]
-
-    # Display the prediction information
-    if not forecast.empty:
-        yhat = "{:.2f}".format(float(forecast['yhat']))
-        yhat_upper = "{:.2f}".format(float(forecast['yhat_upper']))
-        yhat_lower = "{:.2f}".format(float(forecast['yhat_lower']))
-        prediction_year_info = "On {} the predicted supply demand is between {} and {}, with a most likely demand of {}.".format(
-            d, yhat_upper, yhat_lower, yhat)
-        st.write(prediction_year_info)
+        st.header("Our Model")
     else:
-        st.write("No prediction available for the selected date.")
-    with open('model/model.json', 'r') as fin:
-         m = model_from_json(fin.read())  # Load model
-    forecast = pd.read_csv('model/forecast.csv')
-    fig=plot_plotly(m,forecast)
-    st.plotly_chart(fig)
+        st.header("Anomaly Detection")
+
+    if selected_model=='Forecasting Model':
+
+        # st_lottie(lottie_coding_1, height=300, key="coding")
+
+        # Load the forecast data
+        df = pd.read_csv("model/forecast.csv")
+
+        # Define start and end dates
+        start_date = datetime.date(2015, 1, 1)
+        end_date = datetime.date(2023, 12, 31)
+
+        # Create date input
+        selected_date = st.date_input(
+            "Choose a date",
+            value=datetime.date(2015, 1, 1),
+            min_value=start_date,
+            max_value=end_date,
+            key="date_input"
+        )
+
+        # Filter the forecast data for the selected date
+        d = selected_date.strftime("%Y-%m-%d")
+        forecast = df.loc[df['ds'] == d]
+
+        # Display the prediction information
+        if not forecast.empty:
+            yhat = "{:.2f}".format(float(forecast['yhat']))
+            yhat_upper = "{:.2f}".format(float(forecast['yhat_upper']))
+            yhat_lower = "{:.2f}".format(float(forecast['yhat_lower']))
+            prediction_year_info = "On {} the predicted supply demand is between {} and {}, with a most likely demand of {}.".format(
+                d, yhat_upper, yhat_lower, yhat)
+            st.write(prediction_year_info)
+        else:
+            st.write("No prediction available for the selected date.")
+        with open('model/model.json', 'r') as fin:
+            m = model_from_json(fin.read())  # Load model
+        forecast = pd.read_csv('model/forecast.csv')
+        fig=plot_plotly(m,forecast)
+        st.plotly_chart(fig)
+        polar_title = "Polar Plot"
+        st.header(polar_title)
+        info("Info", "This shows the trend of supply demand for the given period.")
+        left_column,  center_column, right_column = st.columns(3)
+        with left_column:
+            " "
+        
+        with center_column:
+            st.image('images/truchain_polarplot.png')
+
+        with right_column:
+            " "
+    else:
+        # st_lottie(lottie_coding_2, height=300, key="coding")
+        results = pd.read_csv('model/anomaly.csv')
+        fig = px.scatter(results.reset_index(), x='ds', y='y', color='anomaly', title='Anomaly’s')
+        fig.update_xaxes(
+            rangeslider_visible=True,
+            rangeselector=dict(
+                buttons=list([
+                    dict(count=1, label="1y", step="year", stepmode="backward"),
+                    dict(count=2, label="3y", step="year", stepmode="backward"),
+                    dict(count=3, label="5y", step="year", stepmode="backward"),
+                    dict(step="all")
+                ])
+            )
+        )
+        st.plotly_chart(fig)
+
+        timeine_title = "Major Supply Chain Hikes"
+        st.header(timeine_title)
+        info("Info", "The timeline highlights the major events in the predicted year regarding supply demands.")
+        path = "model/anomaly.csv"
+        df = pd.read_csv(path)
+
+        items = []
+        i = 1
+        for index, row in df.iterrows():
+            anomaly = str(row["anomaly"])
+            if anomaly == "Yes":
+                content = "On {}, it is expected to experience an anomaly in supply demand.".format(
+                    str(row["ds"]))
+                item = {"id": i, "content": "⚠",
+                        "message": content, "start": str(row["ds"])}
+                items.append(item)
+                i += 1
+
+        options = {
+            "min": "2015-01-04",
+            "max": "2017-01-03"
+        }
+
+        timeline = st_timeline(items, groups=[], options=options, height="300px")
+        st.subheader("Selected item")
+        st.write(timeline)
+
+
+
+
+
 # ---- PROJECTS ----
 with st.container():
     st.write("---")
@@ -284,13 +294,3 @@ with st.container():
 )
 
 
-# Display the PDF file in the Streamlit app
-# st.markdown('''
-# <iframe src=""
-# frameborder="0"
-# marginheight="0"
-# marginwidth="0"
-# width="700px"
-# height="1300px"
-# scrolling="auto"
-# >''', unsafe_allow_html=True)
